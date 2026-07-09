@@ -1,45 +1,29 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
 
 function AboutUs() {
   return (
-    <div className="about-us-container">
+    <>
+      <Navbar />
 
-      <div className="background-image">
+      <div style={{ padding: "30px" }}>
+        <h1>About Paradise Nursery</h1>
 
-        <div className="about-content">
+        <p>
+          Paradise Nursery is your trusted destination for beautiful,
+          affordable houseplants.
+        </p>
 
-          <h1>Paradise Nursery</h1>
+        <p>
+          We offer carefully selected indoor plants, flowering plants,
+          and succulents that brighten homes and offices.
+        </p>
 
-          <p>
-            Paradise Nursery is passionate about bringing nature into every
-            home. We specialize in providing healthy, high-quality indoor
-            plants that brighten living spaces and improve well-being.
-          </p>
-
-          <p>
-            Whether you are looking for aromatic plants, medicinal plants,
-            decorative plants, or beginner-friendly indoor plants, Paradise
-            Nursery offers an extensive collection at affordable prices with
-            excellent customer service.
-          </p>
-
-          <p>
-            Our mission is to inspire people to create greener homes by making
-            plant shopping simple, enjoyable, and accessible for everyone.
-          </p>
-
-          <Link to="/products">
-            <button>
-              Get Started
-            </button>
-          </Link>
-
-        </div>
-
+        <p>
+          Our mission is to make plant ownership simple, enjoyable,
+          and accessible for everyone.
+        </p>
       </div>
-
-    </div>
+    </>
   );
 }
 
