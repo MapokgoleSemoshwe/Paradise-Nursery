@@ -1,72 +1,72 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import { addItem, removeItem, updateQuantity } from "./CartSlice";
-import LandingPage from "./AboutUs";
-import ProductsPage from "./ProductList";
-import CartPage from "./CartItem";
-import Navbar from "./components/Navbar";
-import "./App.css";
+import { Routes, Route, Link } from "react-router-dom";
+
+import AboutUs from "./components/AboutUs";
+import ProductList from "./components/ProductList";
+import CartItem from "./components/CartItem";
+
+function LandingPage() {
+  return (
+    <div className="landing-page">
+
+      <div className="overlay">
+
+        <h1>Paradise Nursery</h1>
+
+        <h2>Bring Nature Into Your Home</h2>
+
+        <p>
+          Paradise Nursery offers beautiful indoor plants,
+          flowering plants and succulents for every home.
+        </p>
+
+        <Link to="/plants">
+          <button className="start-btn">
+            Get Started
+          </button>
+        </Link>
+
+        <Link to="/about">
+          <button className="start-btn">
+            About Us
+          </button>
+        </Link>
+
+      </div>
+
+    </div>
+  );
+}
 
 function App() {
-  const [cart, setCart] = useState([]);
 
-  // Add Item
-  // Add Item
-const addToCart = (plant) => {
-  setCart(addItem(cart, plant));
-};
-
-// Increase Quantity
-const increaseQuantity = (id) => {
-  setCart(updateQuantity(cart, id, 1));
-};
-
-// Decrease Quantity
-const decreaseQuantity = (id) => {
-  setCart(updateQuantity(cart, id, -1));
-};
-
-// Delete Item
-const deleteItem = (id) => {
-  setCart(removeItem(cart, id));
-};
   return (
-    <BrowserRouter>
 
-     <Navbar
-  cartCount={
-    cart.reduce(
-      (total, item) => total + item.quantity,
-      0
-    )
-  }
-/>
+    <Routes>
 
-      <Routes>
+      <Route
+        path="/"
+        element={<LandingPage />}
+      />
 
-        <Route path="/" element={<LandingPage />} />
+      <Route
+        path="/about"
+        element={<AboutUs />}
+      />
 
-        <Route
-          path="/products"
-          element={<ProductsPage addToCart={addToCart} />}
-        />
+      <Route
+        path="/plants"
+        element={<ProductList />}
+      />
 
-        <Route
-          path="/cart"
-          element={
-            <CartPage
-              cart={cart}
-              increaseQuantity={increaseQuantity}
-              decreaseQuantity={decreaseQuantity}
-              deleteItem={deleteItem}
-            />
-          }
-        />
+      <Route
+        path="/cart"
+        element={<CartItem />}
+      />
 
-      </Routes>
+    </Routes>
 
-    </BrowserRouter>
   );
+
 }
 
 export default App;
