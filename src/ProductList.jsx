@@ -1,5 +1,5 @@
-import plants from "../data/plants";
-import PlantCard from "../components/PlantCard";
+import plants from "./data/plants";
+import PlantCard from "./components/PlantCard";
 
 function ProductsPage({ addToCart }) {
 
