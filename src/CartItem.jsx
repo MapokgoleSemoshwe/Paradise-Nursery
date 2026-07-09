@@ -1,116 +1,153 @@
+import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 
-function CartItem({
-  cart,
-  increaseQuantity,
-  decreaseQuantity,
-  deleteItem
-}) {
+import { useSelector, useDispatch } from "react-redux";
 
-  const totalCost = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+import {
+  updateQuantity,
+  removeItem,
+} from "../redux/CartSlice";
+
+function CartItem() {
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart.items);
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
-  const handleDecrease = (item) => {
-    if (item.quantity === 1) {
-      deleteItem(item.id);
-    } else {
-      decreaseQuantity(item.id);
-    }
-  };
-
-  const handleCheckout = () => {
-    alert("Thank you for shopping with Paradise Nursery! Your order has been placed successfully.");
-  };
-
   return (
-    <div className="cart-container">
+    <>
+      <Navbar />
 
-      <h1>Shopping Cart</h1>
+      <div style={{ padding: "20px" }}>
+        <h1>Shopping Cart</h1>
 
-      {cart.length === 0 ? (
-        <h2>Your shopping cart is empty.</h2>
-      ) : (
-        <>
-          {cart.map((item) => (
+        {cart.length === 0 ? (
+          <>
+            <h2>Your cart is empty.</h2>
 
-            <div className="cart-card" key={item.id}>
+            <Link to="/plants">
+              <button>Continue Shopping</button>
+            </Link>
+          </>
+        ) : (
+          <>
+            {cart.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  border: "1px solid #ccc",
+                  borderRadius: "10px",
+                  marginBottom: "20px",
+                  padding: "15px",
+                }}
+              >
+                <div style={{ display: "flex", gap: "20px" }}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    width="120"
+                    height="120"
+                    style={{
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                    }}
+                  />
 
-              <img
-                src={item.image}
-                alt={item.name}
-              />
+                  <div>
+                    <h3>{item.name}</h3>
 
-              <div className="cart-info">
+                    <p>Price: R {item.price}</p>
 
-                <h2>{item.name}</h2>
+                    <p>Quantity: {item.quantity}</p>
 
-                <p>
-                  Unit Price:
-                  <strong> R {item.price}</strong>
-                </p>
+                    <p>
+                      Total:
+                      <strong>
+                        {" "}
+                        R {item.price * item.quantity}
+                      </strong>
+                    </p>
+                  </div>
+                </div>
 
-                <p>
-                  Quantity:
-                  <strong> {item.quantity}</strong>
-                </p>
-
-                <p>
-                  Total:
-                  <strong> R {item.price * item.quantity}</strong>
-                </p>
-
-                <div className="cart-buttons">
-
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
                   <button
-                    onClick={() => increaseQuantity(item.id)}
+                    onClick={() =>
+                      dispatch(
+                        updateQuantity({
+                          id: item.id,
+                          amount: 1,
+                        })
+                      )
+                    }
                   >
                     +
                   </button>
 
                   <button
-                    onClick={() => handleDecrease(item)}
+                    onClick={() =>
+                      dispatch(
+                        updateQuantity({
+                          id: item.id,
+                          amount: -1,
+                        })
+                      )
+                    }
                   >
                     -
                   </button>
 
                   <button
-                    onClick={() => deleteItem(item.id)}
+                    onClick={() =>
+                      dispatch(removeItem(item.id))
+                    }
                   >
                     Delete
                   </button>
-
                 </div>
-
               </div>
+            ))}
 
-            </div>
+            <h2>Total Cart Amount: R {total}</h2>
 
-          ))}
-
-          <h2>Total Cost : R {totalCost}</h2>
-
-          <div className="checkout-buttons">
-
-            <Link to="/products">
-              <button>
-                Continue Shopping
-              </button>
-            </Link>
-
-            <button
-              onClick={handleCheckout}
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+                marginTop: "20px",
+              }}
             >
-              Checkout
-            </button>
+              <Link to="/plants">
+                <button>
+                  Continue Shopping
+                </button>
+              </Link>
 
-          </div>
-
-        </>
-      )}
-
-    </div>
+              <button
+                onClick={() =>
+                  alert("Checkout Coming Soon!")
+                }
+              >
+                Checkout
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 
