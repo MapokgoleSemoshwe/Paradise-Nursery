@@ -1,80 +1,54 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    items:[]
+  items: [],
 };
 
 const cartSlice = createSlice({
+  name: "cart",
+  initialState,
+  reducers: {
+    addItem: (state, action) => {
+      const existing = state.items.find(
+        (item) => item.id === action.payload.id
+      );
 
-    name:"cart",
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        state.items.push({
+          ...action.payload,
+          quantity: 1,
+        });
+      }
+    },
 
-    initialState,
+    removeItem: (state, action) => {
+      state.items = state.items.filter(
+        (item) => item.id !== action.payload
+      );
+    },
 
-    reducers:{
+    updateQuantity: (state, action) => {
+      const { id, amount } = action.payload;
 
-        addItem:(state,action)=>{
+      const item = state.items.find((i) => i.id === id);
 
-            const existing=state.items.find(
-                item=>item.id===action.payload.id
-            );
+      if (!item) return;
 
-            if(existing){
+      item.quantity += amount;
 
-                existing.quantity++;
-
-            }
-
-            else{
-
-                state.items.push({
-                    ...action.payload,
-                    quantity:1
-                });
-
-            }
-
-        },
-
-        removeItem:(state,action)=>{
-
-            state.items=state.items.filter(
-                item=>item.id!==action.payload
-            );
-
-        },
-
-        updateQuantity:(state,action)=>{
-
-            const item=state.items.find(
-                plant=>plant.id===action.payload.id
-            );
-
-            if(item){
-
-                item.quantity=action.payload.quantity;
-
-                if(item.quantity<=0){
-
-                    state.items=state.items.filter(
-                        plant=>plant.id!==item.id
-                    );
-
-                }
-
-            }
-
-        }
-
-    }
-
+      if (item.quantity <= 0) {
+        state.items = state.items.filter((i) => i.id !== id);
+      }
+    },
+  },
 });
 
-export const{
-
-    addItem,
-    removeItem,
-    updateQuantity
-
-}=cartSlice.actions;
+export const {
+  addItem,
+  removeItem,
+  updateQuantity,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
