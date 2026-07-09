@@ -1,49 +1,50 @@
-import plants from "./data/plants";
+import { useState } from "react";
 import PlantCard from "./components/PlantCard";
+import plants from "./data/plants";
 
-function ProductsPage({ addToCart }) {
+function ProductList({ addToCart }) {
 
-  const aromatic = plants.filter(
-    plant => plant.category === "Aromatic Plants"
-  );
+  const [addedItems, setAddedItems] = useState([]);
 
-  const medicinal = plants.filter(
-    plant => plant.category === "Medicinal Plants"
-  );
+  const handleAdd = (plant) => {
+    addToCart(plant);
+    setAddedItems([...addedItems, plant.id]);
+  };
+
+  const categories = [...new Set(plants.map(item => item.category))];
 
   return (
     <div>
 
-      <h2>Aromatic Plants</h2>
+      {categories.map(category => (
 
-      <div className="products">
+        <div key={category}>
 
-        {aromatic.map((plant) => (
-          <PlantCard
-            key={plant.id}
-            plant={plant}
-            addToCart={addToCart}
-          />
-        ))}
+          <h2>{category}</h2>
 
-      </div>
+          <div className="products">
 
-      <h2>Medicinal Plants</h2>
+            {plants
+              .filter(item => item.category === category)
+              .map(plant => (
 
-      <div className="products">
+                <PlantCard
+                  key={plant.id}
+                  plant={plant}
+                  addToCart={handleAdd}
+                  disabled={addedItems.includes(plant.id)}
+                />
 
-        {medicinal.map((plant) => (
-          <PlantCard
-            key={plant.id}
-            plant={plant}
-            addToCart={addToCart}
-          />
-        ))}
+              ))}
 
-      </div>
+          </div>
+
+        </div>
+
+      ))}
 
     </div>
   );
 }
 
-export default ProductsPage;
+export default ProductList;

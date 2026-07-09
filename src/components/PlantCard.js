@@ -1,11 +1,10 @@
-function PlantCard({ plant, addToCart }) {
+function PlantCard({ plant, addToCart, disabled }) {
   return (
     <div className="card">
 
       <img
         src={plant.image}
         alt={plant.name}
-        width="200"
       />
 
       <h3>{plant.name}</h3>
@@ -14,8 +13,11 @@ function PlantCard({ plant, addToCart }) {
 
       <h4>R {plant.price}</h4>
 
-      <button onClick={() => addToCart(plant)}>
-        Add to Cart
+      <button
+        disabled={disabled}
+        onClick={() => addToCart(plant)}
+      >
+        {disabled ? "Added" : "Add to Cart"}
       </button>
 
     </div>
