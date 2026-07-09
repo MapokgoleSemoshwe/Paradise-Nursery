@@ -1,49 +1,80 @@
-import { useState } from "react";
-import PlantCard from "./components/PlantCard";
-import plants from "./data/plants";
+import Navbar from "./Navbar";
+import plants from "../data/plants";
 
-function ProductList({ addToCart }) {
+import { useDispatch, useSelector } from "react-redux";
+import { addItem } from "../redux/CartSlice";
 
-  const [addedItems, setAddedItems] = useState([]);
+function ProductList() {
+  const dispatch = useDispatch();
 
-  const handleAdd = (plant) => {
-    addToCart(plant);
-    setAddedItems([...addedItems, plant.id]);
-  };
+  const cartItems = useSelector((state) => state.cart.items);
 
-  const categories = [...new Set(plants.map(item => item.category))];
+  const addedIds = cartItems.map((item) => item.id);
+
+  const categories = [...new Set(plants.map((plant) => plant.category))];
 
   return (
-    <div>
+    <>
+      <Navbar />
 
-      {categories.map(category => (
+      <div style={{ padding: "20px" }}>
+        <h1>Our Plants</h1>
 
-        <div key={category}>
+        {categories.map((category) => (
+          <div key={category} style={{ marginBottom: "50px" }}>
+            <h2>{category}</h2>
 
-          <h2>{category}</h2>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+                gap: "20px",
+              }}
+            >
+              {plants
+                .filter((plant) => plant.category === category)
+                .map((plant) => (
+                  <div
+                    key={plant.id}
+                    style={{
+                      border: "1px solid #ccc",
+                      borderRadius: "10px",
+                      padding: "15px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <img
+                      src={plant.image}
+                      alt={plant.name}
+                      style={{
+                        width: "180px",
+                        height: "180px",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                      }}
+                    />
 
-          <div className="products">
+                    <h3>{plant.name}</h3>
 
-            {plants
-              .filter(item => item.category === category)
-              .map(plant => (
+                    <p>
+                      <strong>R {plant.price}</strong>
+                    </p>
 
-                <PlantCard
-                  key={plant.id}
-                  plant={plant}
-                  addToCart={handleAdd}
-                  disabled={addedItems.includes(plant.id)}
-                />
-
-              ))}
-
+                    <button
+                      disabled={addedIds.includes(plant.id)}
+                      onClick={() => dispatch(addItem(plant))}
+                    >
+                      {addedIds.includes(plant.id)
+                        ? "Added"
+                        : "Add to Cart"}
+                    </button>
+                  </div>
+                ))}
+            </div>
           </div>
-
-        </div>
-
-      ))}
-
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
 
